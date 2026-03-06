@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grocery List</title>
+  </head>
+  <body>
+    <header>
+      <figure>
+        <img src="src/img/avatar.png" alt="User's avatar" />
+        <h1>Welcome Andre</h1>
+      </figure>
+    </header>
+    <main>
+      <section>
+        <ul class="js-items__list"></ul>
+      </section>
+      <button type="button" class="js-add-item-button">Add item</button>
+      <section class="cart-summary" aria-labelledby="summary-title">
+        <h3 id="summary-title" class="visually-hidden">Order summary</h3>
+        <p class="summary-price">R$10</p>
+        <p class="summary-details">
+          <strong>2 items</strong> | R$5,00 for each friend
+        </p>
+      </section>
+    </main>
+    <!-- Add item -->
+    <dialog id="addItemDialog" aria-labelledby="dialog-title">
+      <form method="dialog" class="js-add-item-form">
+        <header class="dialog-header">
+          <h2 id="dialog-title">New item</h2>
+
+          <button
+            type="submit"
+            value="cancel"
+            aria-label="Close dialog"
+            class="dialog-close"
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="dialog-content">
+          <div class="form-field">
+            <label for="productName">Product name</label>
+            <input id="productName" name="productName" type="text" required />
+          </div>
+
+          <div class="form-field">
+            <label for="productPrice">Product price</label>
+            <input
+              id="productPrice"
+              name="productPrice"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
+
+          <fieldset class="quantity-selector">
+            <legend class="visually-hidden">Quantity</legend>
+
+            <button
+              type="button"
+              aria-label="Decrease quantity"
+              data-behavior="remove"
+              class="js-btn-qty"
+            >
+              −
+            </button>
+
+            <output id="quantityValue" aria-live="polite"> 2 </output>
+
+            <button
+              type="button"
+              aria-label="Increase quantity"
+              data-behavior="add"
+              class="js-btn-qty"
+            >
+              +
+            </button>
+          </fieldset>
+        </div>
+
+        <footer class="js-dialog-footer"></footer>
+      </form>
+    </dialog>
+    <script type="module" src="/src/js/listController"></script>
+  </body>
+</html>
