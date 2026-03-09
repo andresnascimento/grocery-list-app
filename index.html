@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="/src/css/style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
       rel="stylesheet"
@@ -10,26 +10,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grocery List</title>
   </head>
-  <body>
-    <header>
-      <figure>
-        <img src="src/img/avatar-1.png" alt="User's avatar" />
-        <h1>Welcome Andre</h1>
-      </figure>
-      <button type="button" class="js-add-friend-button">Add friend</button>
+  <body class="grocery-list__app-container">
+    <header
+      class="grocery-list__header-container flex justify-between items-center"
+    >
+      <div
+        class="header__user-container flex justify-between items-center gap-16"
+      >
+        <figure>
+          <img
+            class="header__user-image"
+            src="src/img/avatar-1.png"
+            alt="User's avatar"
+          />
+        </figure>
+        <h1 class="header__user-name">Welcome Andre</h1>
+      </div>
+      <button
+        type="button"
+        class="btn btn-sm btn-outline js-add-friend-button flex items-center gap-8"
+      >
+        <span class="material-symbols-outlined btn-icon">add</span> Add friend
+      </button>
     </header>
-    <main>
+    <main class="items__list-container">
       <section>
         <ul class="js-items__list"></ul>
       </section>
-      <button type="button" class="js-add-item-button">Add item</button>
+
       <section
-        class="cart-summary js-summary hidden"
+        class="cart-summary js-summary flex justify-between"
         aria-labelledby="summary-title"
       >
-        <h3 id="summary-title" class="visually-hidden"></h3>
-        <p class="summary-price"></p>
-        <p class="summary-details"></p>
+        <div class="summary-info-container">
+          <h3 id="summary-title" class="visually-hidden"></h3>
+          <p class="summary-price"></p>
+          <p class="summary-details"></p>
+        </div>
+        <button type="button" class="js-add-item-button btn btn-float-primary">
+          <span class="material-symbols-outlined btn-icon">add</span>
+        </button>
       </section>
     </main>
     <!-- Add item dialog -->

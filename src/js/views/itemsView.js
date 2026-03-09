@@ -34,28 +34,36 @@ class ItemsView {
                 <article>
                     <header class="grocery-item__header">
                         <h3 class="grocery-item__header-title">${item.name}</h3>
-                        <p><span class="grocery-item__header-subtitle js-item-price">${item.price}</span> / unit</p>
-                        <span class="material-symbols-outlined">edit</span>
+                        <p class="grocery-item__header-subtitle-container flex items-center gap-4">
+                            <span class="grocery-item__header-subtitle js-item-price">${item.price}</span>
+                            <span>/ unit</span>
+                            <span class="material-symbols-outlined btn-icon">edit</span>
+                        </p>
                     </header>
-                    <div class="js-quantity-selector grocery-item__actions">
-                        <button class="js-remove-button" type="button" data-behavior="remove" aria-label="Remove one ${item.name}">
-                        <span class="material-symbols-outlined btn-icon btn-${isLastItem ? "delete" : "remove"}">${isLastItem ? "delete" : "remove"}</span>
-                        </button>
-                        <output
-                        aria-live="polite"
-                        aria-label="Quantity of ${item.name}"
-                        >
-                        ${item.quantity}
-                        </output>
-                        <button class="js-add-button" type="button" data-behavior="add" aria-label="Add one ${item.name}">
-                        <span class="material-symbols-outlined btn-icon">add</span>
-                        </button>
+                    <div class="grocery-item__quantity-container flex justify-between items-center ">
+                        <p class="grocery-item__total">
+                            <output aria-label="Total price for ${item.name}">
+                                ${+item.price * +item.quantity}
+                            </output>
+                        </p>
+                        <div class="js-quantity-selector grocery-item__actions flex justify-between items-center gap-16 ">
+                            <button class="js-remove-button btn btn__control btn__control-remove" type="button" data-behavior="remove" aria-label="Remove one ${item.name}">
+                            <span class="material-symbols-outlined btn-icon btn-${isLastItem ? "delete" : "remove"}">${isLastItem ? "delete" : "remove"}</span>
+                            </button>
+                            <output
+                            class="js-item-quantity"
+                            value="${item.quantity}"
+                            aria-live="polite"
+                            aria-label="Quantity of ${item.name}"
+                            >
+                            ${item.quantity}
+                            </output>
+                            <button class="js-add-button  btn btn__control btn__control-add" type="button" data-behavior="add" aria-label="Add one ${item.name}">
+                            <span class="material-symbols-outlined btn-icon">add</span>
+                            </button>
+                        </div>
+                        
                     </div>
-                    <p class="grocery-item__total">
-                        <output aria-label="Total price for ${item.name}"
-                        >${+item.price * +item.quantity} </output
-                        >
-                    </p>
                 </article>
           </li>`;
   }
@@ -114,7 +122,7 @@ class ItemsView {
       0,
     );
     this._summaryPrice.textContent = `${totalPrice}`;
-    this._summaryDetails.innerHTML = `<strong>${totalQuantity} items</strong> | ${totalPrice / this._totalFriends} for each friend `;
+    this._summaryDetails.innerHTML = `${totalQuantity} items | ${totalPrice / this._totalFriends} for each friend `;
   }
 
   updateSummary(newItemQuantity, updatedItemID) {
@@ -226,12 +234,10 @@ class ItemsView {
 
       const groceryItem = btn.closest(".grocery-item");
       const groceryItemId = groceryItem.dataset.id;
-      const itemQuantity = groceryItem.querySelector("output");
-      const itemTotalPrice = groceryItem.querySelector(
-        ".grocery-item__total output",
-      );
+      const itemQuantity = groceryItem.querySelector(".js-item-quantity");
+      const itemTotalPrice = groceryItem.querySelector(".grocery-item__total");
 
-      let quantity = +itemQuantity.textContent;
+      let quantity = +itemQuantity.value;
       const itemPrice = +groceryItem.querySelector(
         ".grocery-item__header-subtitle",
       ).textContent;
@@ -248,12 +254,13 @@ class ItemsView {
       }
       if (btn.dataset.behavior === "remove") {
         quantity--;
+        itemQuantity.value = quantity;
         quantity === 1
           ? (btnRemove.innerHTML = `<span class="material-symbols-outlined btn-icon">delete</span>`)
           : null;
       }
 
-      itemQuantity.textContent = quantity === 0 ? 1 : quantity; // FUTURE IMPROVE
+      itemQuantity.value = quantity;
       itemTotalPrice.textContent = itemPrice * quantity;
 
       // update database
