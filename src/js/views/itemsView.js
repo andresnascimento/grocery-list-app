@@ -1,6 +1,7 @@
 class ItemsView {
   _itemsList = document.querySelector(".js-items__list");
   _formField = document.querySelector(".js-add-item-form");
+  _summarySection = document.querySelector(".js-summary");
   _summaryDetails = document.querySelector(".summary-details");
   _summaryPrice = document.querySelector(".summary-price");
   //   Inputs
@@ -10,6 +11,7 @@ class ItemsView {
   _editProductNameInput = document.querySelector("#editProductName");
   _editProductPriceInput = document.querySelector("#editProductPrice");
   _editQuantityValueInput = document.querySelector("#editQuantityValue");
+  _friendNameInput = document.querySelector("#addFriendName");
   //   Dialog
   _addItemDialog = document.querySelector("#addItemDialog");
   _editItemDialog = document.querySelector("#editItemDialog");
@@ -21,11 +23,13 @@ class ItemsView {
   _changeItemQuantityBtn = document.querySelectorAll(".js-btn-qty");
   _submitEditedItemBtn = document.querySelector(".js-submit-edit-item");
   _addNewFriendBtn = document.querySelector(".js-add-friend-button");
+  _submitFriendBtn = document.querySelector(".js-submit-add-friend");
 
   _data;
+  _dataFriends;
   _totalFriends = 1;
   _generateMarkup(item) {
-    const lastItem = item.quantity === 1;
+    const isLastItem = item.quantity === 1;
     return `<li class="grocery-item" data-id="${item.id}">
                 <article>
                     <header class="grocery-item__header">
@@ -35,7 +39,7 @@ class ItemsView {
                     </header>
                     <div class="js-quantity-selector grocery-item__actions">
                         <button class="js-remove-button" type="button" data-behavior="remove" aria-label="Remove one ${item.name}">
-                        <span class="material-symbols-outlined btn-icon btn-${lastItem ? "delete" : "remove"}">${lastItem ? "delete" : "remove"}</span>
+                        <span class="material-symbols-outlined btn-icon btn-${isLastItem ? "delete" : "remove"}">${isLastItem ? "delete" : "remove"}</span>
                         </button>
                         <output
                         aria-live="polite"
@@ -56,6 +60,15 @@ class ItemsView {
           </li>`;
   }
 
+  _generateEmptyState() {
+    return `<li class="items__empty-state">
+                <figure>
+                <img src="src/img/empty.png" alt="" />
+                <h2>Add your first grocery item</h2>
+                </figure>
+            </li>`;
+  }
+
   _updateDialogButton() {
     const markup = `<button
             type="submit"
@@ -70,28 +83,33 @@ class ItemsView {
   }
 
   render(data) {
-    if (data.length === 0) return;
-
-    this._data = data;
+    this._dataItems = data.items;
+    this._dataFriends = data.list_friends;
     this._itemsList.innerHTML = "";
-    console.log(data);
 
-    // render the list of items
-    this._data.forEach((element) => {
-      const markup = this._generateMarkup(element);
-      this._itemsList.insertAdjacentHTML("afterbegin", markup);
-    });
+    // empty list
+    if (this._dataItems.length === 0) {
+      //   this._summarySection.classList.add("hidden");
+      const emptyMarkup = this._generateEmptyState();
+      this._itemsList.insertAdjacentHTML("afterbegin", emptyMarkup);
+    } else {
+      // render the list of items
+      this._dataItems.forEach((element) => {
+        const markup = this._generateMarkup(element);
+        this._itemsList.insertAdjacentHTML("afterbegin", markup);
+      });
 
-    // render summary
-    this._renderSummary();
+      // render summary
+      this._renderSummary();
+    }
   }
 
   _renderSummary() {
-    const totalPrice = this._data
+    const totalPrice = this._dataItems
       .map((e) => e.price * e.quantity)
       .reduce((acc, item) => acc + item, 0);
 
-    const totalQuantity = this._data.reduce(
+    const totalQuantity = this._dataItems.reduce(
       (acc, item) => acc + item.quantity,
       0,
     );
@@ -101,21 +119,29 @@ class ItemsView {
 
   updateSummary(newItemQuantity, updatedItemID) {
     //update the local data with new item quantity without rendering the items list
-    const updateData = this._data.map((item) => {
+    const updateData = this._dataItems.map((item) => {
       return item.id === updatedItemID
         ? { ...item, quantity: newItemQuantity }
         : item;
     });
-    this._data = updateData;
+    this._dataItems = updateData;
     // render the summary with updated data
     this._renderSummary();
   }
 
   //   -- HANDLERS --
 
-  addNewFriendHandler() {
+  addNewFriendHandler(handler) {
     this._addNewFriendBtn.addEventListener("click", (e) => {
       this._addFriendDialog.showModal();
+    });
+
+    this._submitFriendBtn.addEventListener("click", (e) => {
+      const name = this._friendNameInput.value;
+      const avatar = document.querySelector(
+        'input[name="avatar"]:checked',
+      )?.value;
+      handler(name, avatar);
     });
   }
 
@@ -157,7 +183,7 @@ class ItemsView {
       if (!header) return;
       // filter the item by it's id
       const currItemID = e.target.closest(".grocery-item").dataset.id;
-      const currItem = this._data.filter(
+      const currItem = this._dataItems.filter(
         (item) => item.id === currItemID,
         0,
       )[0];

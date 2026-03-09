@@ -1,14 +1,13 @@
 import items from "./api/items";
 import list from "./api/lists";
+import friends from "./api/friends";
 import itemsView from "./views/itemsView";
 
 async function controlLoadItems() {
   try {
-    // improve the id management
-    const loadItems = await items.getItems();
+    // FUTURE IMPROVE: list id management
     const loadListDetails = await list.getListDetails();
-    console.log(loadListDetails);
-    itemsView.render(loadItems);
+    itemsView.render(loadListDetails);
     // update summary
   } catch (error) {
     console.error("Controller error:", error);
@@ -20,13 +19,20 @@ async function controlSubmitNewItem(name, price, quantity) {
   await controlLoadItems();
 }
 
+async function addFriend(name, avatar) {
+  const friend = await friends.createFriend(name, avatar);
+
+  await friends.addFriendToList(friend.id);
+  await controlLoadItems();
+}
+
 async function controlUpdateItemQuantity(id, quantity) {
   await items.updateItemQuantity(id, quantity);
 
   // delete item
   if (quantity === 0) {
     await items.deleteItem(id);
-    await controlLoadItems();
+    controlLoadItems();
   }
   // update summary
   itemsView.updateSummary(quantity, id);
@@ -44,7 +50,7 @@ async function init() {
   itemsView.addItemHandler();
   itemsView.editItemHandler(controlUpdateItemControl);
   itemsView.formFieldHandler();
-  itemsView.addNewFriendHandler();
+  itemsView.addNewFriendHandler(addFriend);
 }
 
 init();
