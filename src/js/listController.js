@@ -1,10 +1,13 @@
 import items from "./api/items";
+import list from "./api/lists";
 import itemsView from "./views/itemsView";
 
 async function controlLoadItems() {
   try {
     // improve the id management
     const loadItems = await items.getItems();
+    const loadListDetails = await list.getListDetails();
+    console.log(loadListDetails);
     itemsView.render(loadItems);
     // update summary
   } catch (error) {
@@ -41,6 +44,7 @@ async function init() {
   itemsView.addItemHandler();
   itemsView.editItemHandler(controlUpdateItemControl);
   itemsView.formFieldHandler();
+  itemsView.addNewFriendHandler();
 }
 
 init();

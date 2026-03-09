@@ -14,11 +14,13 @@ class ItemsView {
   _addItemDialog = document.querySelector("#addItemDialog");
   _editItemDialog = document.querySelector("#editItemDialog");
   _footerItemDialog = document.querySelector(".js-dialog-footer");
+  _addFriendDialog = document.querySelector("#addFriendDialog");
   //   Buttons
   _addItemBtn = document.querySelector(".js-add-item-button");
   _submitNewItemBtn = document.querySelector(".js-submit-new-item");
   _changeItemQuantityBtn = document.querySelectorAll(".js-btn-qty");
   _submitEditedItemBtn = document.querySelector(".js-submit-edit-item");
+  _addNewFriendBtn = document.querySelector(".js-add-friend-button");
 
   _data;
   _totalFriends = 1;
@@ -110,6 +112,12 @@ class ItemsView {
   }
 
   //   -- HANDLERS --
+
+  addNewFriendHandler() {
+    this._addNewFriendBtn.addEventListener("click", (e) => {
+      this._addFriendDialog.showModal();
+    });
+  }
 
   formFieldHandler() {
     this._formField.addEventListener("input", (e) => {

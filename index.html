@@ -13,9 +13,10 @@
   <body>
     <header>
       <figure>
-        <img src="src/img/avatar.png" alt="User's avatar" />
+        <img src="src/img/avatar-1.png" alt="User's avatar" />
         <h1>Welcome Andre</h1>
       </figure>
+      <button type="button" class="js-add-friend-button">Add friend</button>
     </header>
     <main>
       <section>
@@ -166,6 +167,100 @@
             type="submit"
             value="confirm"
             class="btn-primary js-submit-edit-item"
+          >
+            Save
+          </button>
+          <button
+            type="submit"
+            value="cancel"
+            aria-label="Cancel edition"
+            class="dialog-close"
+            formnovalidate
+          >
+            Cancel
+          </button>
+        </footer>
+      </form>
+    </dialog>
+
+    <!-- add friend dialog -->
+    <dialog id="addFriendDialog" aria-labelledby="friendDialogTitle">
+      <form method="dialog" class="js-add-friend-form">
+        <header class="dialog-header">
+          <h2 id="friendDialogTitle">Add new Friend</h2>
+
+          <button
+            type="submit"
+            value="cancel"
+            aria-label="Close dialog"
+            class="dialog-close"
+            formnovalidate
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="dialog-content">
+          <div class="form-field">
+            <label for="addFriendName">Name</label>
+            <input
+              id="addFriendName"
+              name="addFriendName"
+              type="text"
+              required
+            />
+          </div>
+
+          <fieldset class="avatar-picker">
+            <legend>Choose your avatar</legend>
+
+            <label>
+              <input type="radio" name="avatar" value="avatar-1" />
+              <img
+                src="src/img/avatar-1.png"
+                alt="Avatar with short black hair looking upward"
+              />
+            </label>
+
+            <label>
+              <input type="radio" name="avatar" value="avatar-2" />
+              <img
+                src="src/img/avatar-2.png"
+                alt="Avatar with tall hair, glasses and green jacket"
+              />
+            </label>
+
+            <label>
+              <input type="radio" name="avatar" value="avatar-3" />
+              <img
+                src="src/img/avatar-3.png"
+                alt="Avatar with bowl haircut wearing a purple shirt"
+              />
+            </label>
+
+            <label>
+              <input type="radio" name="avatar" value="avatar-4" />
+              <img
+                src="src/img/avatar-4.png"
+                alt="Avatar of woman with long black hair wearing a purple top"
+              />
+            </label>
+
+            <label>
+              <input type="radio" name="avatar" value="avatar-5" />
+              <img
+                src="src/img/avatar-5.png"
+                alt="Avatar of woman with curly hair wearing earrings and a pink shirt"
+              />
+            </label>
+          </fieldset>
+        </div>
+
+        <footer class="js-dialog-footer">
+          <button
+            type="submit"
+            value="confirm"
+            class="btn-primary js-submit-add-friend"
           >
             Save
           </button>
