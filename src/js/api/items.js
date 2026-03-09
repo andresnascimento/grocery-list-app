@@ -39,11 +39,30 @@ async function getItems() {
 }
 
 // update item
-async function updateItem(id, quantity) {
+async function updateItemQuantity(id, quantity) {
   const { data, error } = await supabase
     .from("items")
     .update({ quantity: quantity })
     .eq("id", id);
+
+  if (error) {
+    console.error("Error on updating item", error.message);
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+async function updateItem(id, name, price, quantity) {
+  const { data, error } = await supabase
+    .from("items")
+    .update({ name: name, price: price, quantity: quantity })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error on updating item", error.message);
+    throw new Error(error.message);
+  }
 
   return data;
 }
@@ -51,6 +70,17 @@ async function updateItem(id, quantity) {
 // delete item
 async function deleteItem(id) {
   const { data, error } = await supabase.from("items").delete().eq("id", id);
+
+  if (error) {
+    console.error("Error on deleting item", error.message);
+    throw new Error(error.message);
+  }
 }
 
-export default { addItem, getItems, updateItem, deleteItem };
+export default {
+  addItem,
+  getItems,
+  updateItem,
+  deleteItem,
+  updateItemQuantity,
+};

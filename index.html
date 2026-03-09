@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grocery List</title>
   </head>
@@ -26,7 +30,7 @@
         </p>
       </section>
     </main>
-    <!-- Add item -->
+    <!-- Add item dialog -->
     <dialog id="addItemDialog" aria-labelledby="dialog-title">
       <form method="dialog" class="js-add-item-form">
         <header class="dialog-header">
@@ -37,6 +41,7 @@
             value="cancel"
             aria-label="Close dialog"
             class="dialog-close"
+            formnovalidate
           >
             ×
           </button>
@@ -87,6 +92,93 @@
         </div>
 
         <footer class="js-dialog-footer"></footer>
+      </form>
+    </dialog>
+
+    <!-- Edit item dialog -->
+    <dialog id="editItemDialog" aria-labelledby="dialog-title">
+      <form method="dialog" class="js-edit-item-form">
+        <header class="dialog-header">
+          <h2 id="dialog-title">Edit item</h2>
+
+          <button
+            type="submit"
+            value="cancel"
+            aria-label="Close dialog"
+            class="dialog-close"
+            formnovalidate
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="dialog-content">
+          <div class="form-field">
+            <label for="editProductName">Product name</label>
+            <input
+              id="editProductName"
+              name="editProductName"
+              type="text"
+              required
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="editProductPrice">Product price</label>
+            <input
+              id="editProductPrice"
+              name="editProductPrice"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
+
+          <fieldset class="quantity-selector">
+            <legend class="visually-hidden">Quantity</legend>
+
+            <button
+              type="button"
+              aria-label="Decrease quantity"
+              data-behavior="remove"
+              class="js-btn-qty"
+            >
+              −
+            </button>
+
+            <output id="editQuantityValue" aria-live="polite"> 2 </output>
+
+            <button
+              type="button"
+              aria-label="Increase quantity"
+              data-behavior="add"
+              class="js-btn-qty"
+            >
+              +
+            </button>
+          </fieldset>
+        </div>
+
+        <footer class="js-dialog-footer">
+          <button
+            type="submit"
+            value="confirm"
+            class="btn-primary js-submit-edit-item"
+          >
+            Save
+          </button>
+          <button
+            type="submit"
+            value="cancel"
+            aria-label="Cancel edition"
+            class="dialog-close"
+            formnovalidate
+          >
+            Cancel
+          </button>
+        </footer>
       </form>
     </dialog>
     <script type="module" src="/src/js/listController"></script>
