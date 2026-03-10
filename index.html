@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="/src/css/style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
       rel="stylesheet"
@@ -10,37 +10,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grocery List</title>
   </head>
-  <body>
-    <header>
-      <figure>
-        <img src="src/img/avatar.png" alt="User's avatar" />
-        <h1>Welcome Andre</h1>
-      </figure>
+  <body class="grocery-list__app-container">
+    <header
+      class="grocery-list__header-container flex justify-between items-center"
+    >
+      <div
+        class="header__user-container flex justify-between items-center gap-16"
+      >
+        <figure>
+          <img
+            class="header__user-image"
+            src="src/img/avatar-1.png"
+            alt="User's avatar"
+          />
+        </figure>
+        <h1 class="header__user-name">Grocery list da massa!</h1>
+      </div>
+      <button
+        type="button"
+        class="btn btn-sm btn-outline js-add-friend-button flex items-center gap-8"
+      >
+        <span class="material-symbols-outlined btn-icon">add</span> Add friend
+      </button>
     </header>
-    <main>
+    <main class="items__list-container">
       <section>
-        <ul class="js-items__list"></ul>
+        <ul class="js-items__list items__list-wrap"></ul>
       </section>
-      <button type="button" class="js-add-item-button">Add item</button>
-      <section class="cart-summary" aria-labelledby="summary-title">
-        <h3 id="summary-title" class="visually-hidden">Order summary</h3>
-        <p class="summary-price">R$10</p>
-        <p class="summary-details">
-          <strong>2 items</strong> | R$5,00 for each friend
-        </p>
+
+      <section
+        class="cart-summary js-summary flex justify-between"
+        aria-labelledby="summary-title"
+      >
+        <div class="summary-info-container">
+          <h3 id="summary-title" class="visually-hidden"></h3>
+          <p class="summary-price"></p>
+          <p class="summary-details"></p>
+        </div>
+        <button type="button" class="js-add-item-button btn btn-float-primary">
+          <span class="material-symbols-outlined btn-icon">add</span>
+        </button>
       </section>
     </main>
     <!-- Add item dialog -->
-    <dialog id="addItemDialog" aria-labelledby="dialog-title">
+    <dialog class="dialog" id="addItemDialog" aria-labelledby="dialog-title">
       <form method="dialog" class="js-add-item-form">
-        <header class="dialog-header">
-          <h2 id="dialog-title">New item</h2>
+        <header class="dialog-header flex justify-between">
+          <h2 id="dialog-title" class="dialog-title">New item</h2>
 
           <button
             type="submit"
             value="cancel"
             aria-label="Close dialog"
-            class="dialog-close"
+            class="js-dialog-close-btn btn btn-md btn__control"
             formnovalidate
           >
             ×
@@ -66,14 +88,16 @@
             />
           </div>
 
-          <fieldset class="quantity-selector">
-            <legend class="visually-hidden">Quantity</legend>
+          <fieldset
+            class="quantity-selector grocery-item__actions grocery-item__actions-dialog flex justify-between items-center gap-16"
+          >
+            <legend>Quantity</legend>
 
             <button
               type="button"
               aria-label="Decrease quantity"
               data-behavior="remove"
-              class="js-btn-qty"
+              class="js-btn-qty btn btn__control btn__control-remove"
             >
               −
             </button>
@@ -84,7 +108,7 @@
               type="button"
               aria-label="Increase quantity"
               data-behavior="add"
-              class="js-btn-qty"
+              class="js-btn-qty btn btn__control btn__control-add"
             >
               +
             </button>
@@ -96,16 +120,16 @@
     </dialog>
 
     <!-- Edit item dialog -->
-    <dialog id="editItemDialog" aria-labelledby="dialog-title">
+    <dialog class="dialog" id="editItemDialog" aria-labelledby="dialog-title">
       <form method="dialog" class="js-edit-item-form">
-        <header class="dialog-header">
-          <h2 id="dialog-title">Edit item</h2>
+        <header class="dialog-header flex justify-between">
+          <h2 id="dialog-title" class="dialog-title">Edit item</h2>
 
           <button
             type="submit"
             value="cancel"
             aria-label="Close dialog"
-            class="dialog-close"
+            class="dialog-close btn btn-md btn__control"
             formnovalidate
           >
             ×
@@ -136,14 +160,16 @@
             />
           </div>
 
-          <fieldset class="quantity-selector">
-            <legend class="visually-hidden">Quantity</legend>
+          <fieldset
+            class="quantity-selector grocery-item__actions grocery-item__actions-dialog flex justify-between items-center gap-16"
+          >
+            <legend>Quantity</legend>
 
             <button
               type="button"
               aria-label="Decrease quantity"
               data-behavior="remove"
-              class="js-btn-qty"
+              class="js-btn-qty btn btn__control btn__control-remove"
             >
               −
             </button>
@@ -154,29 +180,128 @@
               type="button"
               aria-label="Increase quantity"
               data-behavior="add"
-              class="js-btn-qty"
+              class="js-btn-qty btn btn__control btn__control-add"
             >
               +
             </button>
           </fieldset>
         </div>
 
-        <footer class="js-dialog-footer">
-          <button
-            type="submit"
-            value="confirm"
-            class="btn-primary js-submit-edit-item"
-          >
-            Save
-          </button>
+        <footer class="js-dialog-footer flex justify-between gap-16">
           <button
             type="submit"
             value="cancel"
             aria-label="Cancel edition"
-            class="dialog-close"
+            class="dialog-close btn btn-lg"
             formnovalidate
           >
             Cancel
+          </button>
+          <button
+            type="submit"
+            value="confirm"
+            class="btn-primary btn btn-lg js-submit-edit-item"
+          >
+            Save
+          </button>
+        </footer>
+      </form>
+    </dialog>
+
+    <!-- add friend dialog -->
+    <dialog
+      class="dialog"
+      id="addFriendDialog"
+      aria-labelledby="friendDialogTitle"
+    >
+      <form method="dialog" class="js-add-friend-form">
+        <header class="dialog-header flex justify-between">
+          <h2 id="friendDialogTitle">Add new Friend</h2>
+
+          <button
+            type="submit"
+            value="cancel"
+            aria-label="Close dialog"
+            class="dialog-close btn btn-md btn__control"
+            formnovalidate
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="dialog-content">
+          <div class="form-field">
+            <label for="addFriendName">Name</label>
+            <input
+              id="addFriendName"
+              name="addFriendName"
+              type="text"
+              required
+            />
+          </div>
+
+          <fieldset class="avatar-picker">
+            <legend>Choose your avatar</legend>
+            <div class="flex justify-between gap-16">
+              <label class="avatar-option">
+                <input type="radio" name="avatar" value="avatar-1" />
+                <img
+                  src="src/img/avatar-1.png"
+                  alt="Avatar with short black hair looking upward"
+                />
+              </label>
+
+              <label class="avatar-option">
+                <input type="radio" name="avatar" value="avatar-2" />
+                <img
+                  src="src/img/avatar-2.png"
+                  alt="Avatar with tall hair, glasses and green jacket"
+                />
+              </label>
+
+              <label class="avatar-option">
+                <input type="radio" name="avatar" value="avatar-3" />
+                <img
+                  src="src/img/avatar-3.png"
+                  alt="Avatar with bowl haircut wearing a purple shirt"
+                />
+              </label>
+
+              <label class="avatar-option">
+                <input type="radio" name="avatar" value="avatar-4" />
+                <img
+                  src="src/img/avatar-4.png"
+                  alt="Avatar of woman with long black hair wearing a purple top"
+                />
+              </label>
+
+              <label class="avatar-option">
+                <input type="radio" name="avatar" value="avatar-5" />
+                <img
+                  src="src/img/avatar-5.png"
+                  alt="Avatar of woman with curly hair wearing earrings and a pink shirt"
+                />
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <footer class="js-dialog-footer flex justify-between gap-16">
+          <button
+            type="submit"
+            value="cancel"
+            aria-label="Cancel edition"
+            class="dialog-close btn btn-lg"
+            formnovalidate
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            value="confirm"
+            class="btn-primary btn btn-lg js-submit-add-friend"
+          >
+            Save
           </button>
         </footer>
       </form>
