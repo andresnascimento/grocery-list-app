@@ -1,6 +1,7 @@
 class ItemsView {
   _itemsList = document.querySelector(".js-items__list");
   _formField = document.querySelector(".js-add-item-form");
+  _friendFormField = document.querySelector(".js-add-friend-form");
   _summarySection = document.querySelector(".js-summary");
   _summaryDetails = document.querySelector(".summary-details");
   _summaryPrice = document.querySelector(".summary-price");
@@ -20,6 +21,7 @@ class ItemsView {
   //   Buttons
   _addItemBtn = document.querySelector(".js-add-item-button");
   _submitNewItemBtn = document.querySelector(".js-submit-new-item");
+  _newItemCloseBtn = document.querySelector("js-dialog-close-btn");
   _changeItemQuantityBtn = document.querySelectorAll(".js-btn-qty");
   _submitEditedItemBtn = document.querySelector(".js-submit-edit-item");
   _addNewFriendBtn = document.querySelector(".js-add-friend-button");
@@ -29,7 +31,6 @@ class ItemsView {
   _dataFriends;
   _totalFriends = 1;
   _generateMarkup(item) {
-    const isLastItem = item.quantity === 1;
     return `<li class="grocery-item" data-id="${item.id}">
                 <article>
                     <header class="grocery-item__header">
@@ -47,9 +48,9 @@ class ItemsView {
                             </output>
                         </p>
                         <div class="js-quantity-selector grocery-item__actions flex justify-between items-center gap-16 ">
-                            <button class="js-remove-button btn btn__control btn__control-remove" type="button" data-behavior="remove" aria-label="Remove one ${item.name}">
-                            <span class="material-symbols-outlined btn-icon btn-${isLastItem ? "delete" : "remove"}">${isLastItem ? "delete" : "remove"}</span>
-                            </button>
+                        <div class="js-dynamic-button">  
+                            ${this._generateQtyButtonMarkup("remove")}
+                        </div>  
                             <output
                             class="js-item-quantity"
                             value="${item.quantity}"
@@ -81,7 +82,7 @@ class ItemsView {
     const markup = `<button
             type="submit"
             value="confirm"
-            class="btn-primary js-submit-new-item"
+            class="btn btn-lg btn-primary js-submit-new-item"
           >
             Add ${this._quantityValueInput.value} items → R$${+this._quantityValueInput.value * +this._productPriceInput.value}
           </button>`;
@@ -137,19 +138,46 @@ class ItemsView {
     this._renderSummary();
   }
 
+  _setInputFocus(input) {
+    // add focus on first input after rendering dialog js
+    requestAnimationFrame(() => {
+      input.focus();
+    });
+  }
+
+  _clearInputValue(inputArr) {
+    // clear values after closing dialog
+    requestAnimationFrame(() => {
+      inputArr.forEach((input) => {
+        input.value = "";
+      });
+    });
+  }
+  _generateQtyButtonMarkup(type) {
+    return `<button class="js-remove-button btn btn__control btn__control-${type}" type="button" data-behavior="${type}" aria-label="${type} item">
+                <span class="material-symbols-outlined btn-icon btn-${type}">${type}</span>
+            </button>`;
+  }
+
   //   -- HANDLERS --
 
   addNewFriendHandler(handler) {
+    const name = this._friendNameInput;
+    const avatar = document.querySelector(
+      'input[name="avatar"]:checked',
+    )?.value;
+
     this._addNewFriendBtn.addEventListener("click", (e) => {
       this._addFriendDialog.showModal();
+      this._setInputFocus(name);
     });
 
     this._submitFriendBtn.addEventListener("click", (e) => {
-      const name = this._friendNameInput.value;
-      const avatar = document.querySelector(
-        'input[name="avatar"]:checked',
-      )?.value;
-      handler(name, avatar);
+      handler(name.value, avatar);
+    });
+
+    this._addFriendDialog.addEventListener("submit", (e) => {
+      this._friendFormField.reset();
     });
   }
 
@@ -180,12 +208,17 @@ class ItemsView {
   addItemHandler() {
     this._addItemBtn.addEventListener("click", () => {
       this._addItemDialog.showModal();
+      this._setInputFocus(this._productNameInput);
     });
     this._dialogQuantityHandler(this._quantityValueInput);
     this._updateDialogButton();
   }
   editItemHandler(handler) {
     let id;
+    const name = this._editProductNameInput;
+    const price = this._editProductPriceInput;
+    const quantity = this._editQuantityValueInput;
+
     this._itemsList.addEventListener("click", (e) => {
       const header = e.target.closest(".grocery-item__header");
       if (!header) return;
@@ -196,44 +229,58 @@ class ItemsView {
         0,
       )[0];
       // set the input values
-      this._editProductNameInput.value = currItem.name;
-      this._editProductPriceInput.value = currItem.price;
-      this._editQuantityValueInput.value = currItem.quantity;
+      name.value = currItem.name;
+      price.value = currItem.price;
+      quantity.value = currItem.quantity;
       id = currItemID;
 
-      this._dialogQuantityHandler(this._editQuantityValueInput);
+      this._dialogQuantityHandler(quantity);
       // opens dialog
       this._editItemDialog.showModal();
+      this._setInputFocus(name);
     });
     // update the item's data
-    this._submitEditedItemBtn.addEventListener("click", () => {
-      handler(
-        id,
-        this._editProductNameInput.value,
-        this._editProductPriceInput.value,
-        this._editQuantityValueInput.value,
-      );
+    this._submitEditedItemBtn.addEventListener("click", () =>
+      handler(id, name.value, price.value, quantity.value),
+    );
+  }
+
+  submitNewItemHandler(handler) {
+    const name = this._productNameInput;
+    const price = this._productPriceInput;
+    const quantity = this._quantityValueInput;
+
+    this._footerItemDialog.addEventListener("click", (e) => {
+      if (e.target.type === "submit")
+        handler(name.value, price.value, quantity.value);
+    });
+
+    this._formField.addEventListener("submit", (e) => {
+      this._formField.reset();
+      quantity.value = 1;
     });
   }
-  submitNewItemHandler(handler) {
-    this._footerItemDialog.addEventListener("click", (e) => {
-      if (e.target.type === "submit") {
-        handler(
-          this._productNameInput.value,
-          this._productPriceInput.value,
-          this._quantityValueInput.value,
-        );
+
+  deleteItemHandler(handler) {
+    this._itemsList.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+
+      const groceryItem = btn.closest(".grocery-item");
+      const itemQuantity = document.querySelector(".js-item-quantity");
+      if (btn.dataset.behavior === "delete") {
+        handler(itemQuantity.value, groceryItem.dataset.id);
       }
     });
   }
-  quantityControlHandler(handler) {
+
+  quantityControlHandler(updateItem, deleteItem) {
     this._itemsList.addEventListener("click", (e) => {
       // get the current elements
       const btn = e.target.closest("button");
       if (!btn) return;
 
       const groceryItem = btn.closest(".grocery-item");
-      const groceryItemId = groceryItem.dataset.id;
       const itemQuantity = groceryItem.querySelector(".js-item-quantity");
       const itemTotalPrice = groceryItem.querySelector(".grocery-item__total");
 
@@ -243,28 +290,28 @@ class ItemsView {
       ).textContent;
 
       // updates interface
-      // FUTURE IMPROVE: improve the deletion process think about a better way to change buttons based on item quantity
-      const btnRemove = groceryItem.querySelector(".js-remove-button");
+      const buttonDynamicContainer =
+        groceryItem.querySelector(".js-dynamic-button");
+
+      if (btn.dataset.behavior === "remove") {
+        quantity--;
+        if (quantity <= 1)
+          buttonDynamicContainer.innerHTML =
+            this._generateQtyButtonMarkup("delete");
+      }
 
       if (btn.dataset.behavior === "add") {
         quantity++;
-        quantity === 2
-          ? (btnRemove.innerHTML = `<span class="material-symbols-outlined btn-icon">remove</span>`)
-          : null;
-      }
-      if (btn.dataset.behavior === "remove") {
-        quantity--;
-        itemQuantity.value = quantity;
-        quantity === 1
-          ? (btnRemove.innerHTML = `<span class="material-symbols-outlined btn-icon">delete</span>`)
-          : null;
+        if (quantity === 2)
+          buttonDynamicContainer.innerHTML =
+            this._generateQtyButtonMarkup("remove");
       }
 
       itemQuantity.value = quantity;
       itemTotalPrice.textContent = itemPrice * quantity;
 
       // update database
-      handler(groceryItemId, quantity, itemPrice);
+      updateItem(groceryItem.dataset.id, quantity, itemPrice);
     });
   }
 }

@@ -28,14 +28,13 @@ async function addFriend(name, avatar) {
 
 async function controlUpdateItemQuantity(id, quantity) {
   await items.updateItemQuantity(id, quantity);
-
-  // delete item
-  if (quantity === 0) {
-    await items.deleteItem(id);
-    controlLoadItems();
-  }
-  // update summary
   itemsView.updateSummary(quantity, id);
+}
+
+async function controlDeleteItem(quantity, id) {
+  await items.deleteItem(id);
+  itemsView.updateSummary(quantity, id);
+  await controlLoadItems();
 }
 
 async function controlUpdateItemControl(id, name, price, quantity) {
@@ -46,6 +45,7 @@ async function controlUpdateItemControl(id, name, price, quantity) {
 async function init() {
   controlLoadItems();
   itemsView.quantityControlHandler(controlUpdateItemQuantity);
+  itemsView.deleteItemHandler(controlDeleteItem);
   itemsView.submitNewItemHandler(controlSubmitNewItem);
   itemsView.addItemHandler();
   itemsView.editItemHandler(controlUpdateItemControl);
