@@ -293,16 +293,6 @@ figure {
   background-color: var(--error-800);
 }
 
-/* .btn-float-primary {
-  background-color: var(--brand-500);
-  color: var(--gray-100);
-  border-radius: var(--radius-md);
-  padding-left: var(--space-5);
-  padding-right: var(--space-5);
-  height: 48px;
-
-} */
-
 .btn-float-primary .btn-icon {
   font-size: var(--text-2xl);
 }
@@ -325,7 +315,20 @@ figure {
 }
 
 /* LIST */
-
+.spinner {
+  height: 32px;
+}
+.spinner-container {
+  width: 100%;
+  text-align: center;
+  color: var(--gray-600);
+}
+.items__empty-state {
+  text-align: center;
+}
+.items__empty-state img {
+  height: 100px;
+}
 .items__list-container {
   background-color: var(--gray-0);
   padding: var(--space-4) var(--space-6);
@@ -434,12 +437,19 @@ figure {
   border-radius: 1rem 1rem 0 0;
   background: var(--gray-0);
   transform: translateY(100%);
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.4s ease,
+    transform 0.4s ease;
   margin: 0;
 }
-.dialog[open] {
+.dialog.dialog-open {
   transform: translateY(0);
   opacity: 1;
+}
+.dialog.dialog-closing {
+  transform: translateY(100%);
+  opacity: 0;
 }
 
 .dialog .btn-lg {

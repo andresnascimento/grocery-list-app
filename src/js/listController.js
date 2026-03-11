@@ -6,6 +6,7 @@ import itemsView from "./views/itemsView";
 async function controlLoadItems() {
   try {
     // FUTURE IMPROVE: list id management
+    itemsView.renderSpinner();
     const loadListDetails = await list.getListDetails();
     itemsView.render(loadListDetails);
     // update summary

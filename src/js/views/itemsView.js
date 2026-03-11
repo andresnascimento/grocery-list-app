@@ -21,7 +21,7 @@ class ItemsView {
   //   Buttons
   _addItemBtn = document.querySelector(".js-add-item-button");
   _submitNewItemBtn = document.querySelector(".js-submit-new-item");
-  _newItemCloseBtn = document.querySelector("js-dialog-close-btn");
+  //   _newItemCloseBtn = document.querySelector("js-dialog-close-btn");
   _changeItemQuantityBtn = document.querySelectorAll(".js-btn-qty");
   _submitEditedItemBtn = document.querySelector(".js-submit-edit-item");
   _addNewFriendBtn = document.querySelector(".js-add-friend-button");
@@ -31,6 +31,7 @@ class ItemsView {
   _dataFriends;
   _totalFriends = 1;
   _generateMarkup(item) {
+    const isLasItem = item.quantity === 1;
     return `<li class="js-grocery-item grocery__item-container" data-id="${item.id}">
                 <article class="flex justify-between items-center">
                     <header class="grocery-item__header">
@@ -44,7 +45,7 @@ class ItemsView {
                             <p class="grocery-item__header-subtitle-container flex items-center gap-4">
                                  • <span class="grocery-item__header-subtitle js-item-price">${this._formatCurrency(item.price)}</span>
                                 <span>each </span>
-                                <span class="material-symbols-outlined btn-icon">edit</span>
+                                
                             </p> 
                         </div>
                     </header>
@@ -52,7 +53,7 @@ class ItemsView {
                         
                         <div class="js-quantity-selector grocery-item__actions flex justify-between items-center gap-16 ">
                             <div class="js-dynamic-button">  
-                                ${this._generateQtyButtonMarkup("remove")}
+                                ${isLasItem ? this._generateQtyButtonMarkup("delete") : this._generateQtyButtonMarkup("remove")}
                             </div>  
                             <output
                             class="js-item-quantity"
@@ -99,6 +100,22 @@ class ItemsView {
     this._footerItemDialog.innerHTML = "";
     this._footerItemDialog.insertAdjacentHTML("afterbegin", markup);
   }
+  renderSpinner() {
+    const markup = ` 
+    <div class="flex justify-center items-center gap-8 spinner-container">
+        <figure>
+          <img
+            class="spinner"
+            src="src/img/loading.gif"
+            alt=""
+          />
+        </figure>
+        <span>Loading...</span>
+    </div>
+        `;
+    this._itemsList.innerHTML = "";
+    this._itemsList.insertAdjacentHTML("afterbegin", markup);
+  }
 
   render(data) {
     this._dataItems = data.items;
@@ -132,7 +149,7 @@ class ItemsView {
       0,
     );
     this._summaryPrice.innerHTML = `${this._formatCurrency(totalPrice)}  `;
-    this._summaryDetails.innerHTML = `${totalQuantity} items`;
+    this._summaryDetails.innerHTML = `${totalQuantity} item`;
     // this._summaryPrice.textContent = `${this._formatCurrency(totalPrice)}`;
     // this._summaryDetails.innerHTML = `${totalQuantity} items | ${totalPrice / this._totalFriends} for each friend `;
   }
@@ -179,7 +196,7 @@ class ItemsView {
     )?.value;
 
     this._addNewFriendBtn.addEventListener("click", (e) => {
-      this._addFriendDialog.showModal();
+      this._showDialog(this._addFriendDialog);
       this._setInputFocus(name);
     });
 
@@ -216,14 +233,34 @@ class ItemsView {
     });
   }
 
+  _showDialog(dialog) {
+    dialog.showModal();
+    requestAnimationFrame(() => dialog.classList.add("dialog-open"));
+
+    // add closing event for dialog's animation
+    const form = dialog.querySelector("form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      dialog.classList.remove("dialog-open");
+      dialog.classList.add("dialog-closing");
+
+      setTimeout(() => {
+        dialog.classList.remove("dialog-closing");
+        dialog.close();
+      }, 200);
+    });
+  }
+
   addItemHandler() {
     this._addItemBtn.addEventListener("click", () => {
-      this._addItemDialog.showModal();
+      this._showDialog(this._addItemDialog);
       this._setInputFocus(this._productNameInput);
     });
     this._dialogQuantityHandler(this._quantityValueInput);
     this._updateDialogButton();
   }
+
   editItemHandler(handler) {
     let id;
     const name = this._editProductNameInput;
@@ -247,7 +284,7 @@ class ItemsView {
 
       this._dialogQuantityHandler(quantity);
       // opens dialog
-      this._editItemDialog.showModal();
+      this._showDialog(this._editItemDialog);
       this._setInputFocus(name);
     });
     // update the item's data
@@ -315,7 +352,7 @@ class ItemsView {
       const uiQuantity = groceryItem.querySelector(".js-item-quantity");
       const uiTotalPrice = groceryItem.querySelector(".grocery-item__total");
 
-      uiQuantity.textContent = quantity;
+      uiQuantity.textContent = quantity >= 2 ? quantity : 1; // condition to prevent render 0 before deleting
       uiTotalPrice.textContent = this._formatCurrency(
         currItem.price * quantity,
       );
