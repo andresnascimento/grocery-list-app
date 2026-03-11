@@ -131,8 +131,8 @@ class ItemsView {
       (acc, item) => acc + item.quantity,
       0,
     );
-    this._summaryPrice.innerHTML = `${this._formatCurrency(totalPrice)}  <span class="summary-details"> • ${totalQuantity} items</span>`;
-    // this._summaryDetails.innerHTML = `${totalQuantity} items | ${totalPrice / this._totalFriends} for each friend `;
+    this._summaryPrice.innerHTML = `${this._formatCurrency(totalPrice)}  `;
+    this._summaryDetails.innerHTML = `${totalQuantity} items`;
     // this._summaryPrice.textContent = `${this._formatCurrency(totalPrice)}`;
     // this._summaryDetails.innerHTML = `${totalQuantity} items | ${totalPrice / this._totalFriends} for each friend `;
   }

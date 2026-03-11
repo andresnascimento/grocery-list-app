@@ -150,9 +150,6 @@ p,
 figure {
   margin: 0;
 }
-input {
-  font-size: var(--text-base);
-}
 
 /* UTILITIES */
 .visually-hidden {
@@ -219,6 +216,7 @@ input {
   font-optical-sizing: auto;
   transition: all 0.4s;
   touch-action: manipulation;
+  background-color: var(--gray-100);
 }
 .btn:hover {
   cursor: pointer;
@@ -230,7 +228,7 @@ input {
 }
 .btn-primary {
   background-color: var(--brand-500);
-  color: var(--gray-100);
+  color: var(--gray-0);
 }
 
 .btn-primary:hover,
@@ -270,6 +268,7 @@ input {
 .btn__control .btn-icon {
   font-size: var(--text-lg);
 }
+
 .btn__control-remove {
   background-color: var(--gray-0);
   color: var(--gray-950);
@@ -309,12 +308,12 @@ input {
 
 /* HEADER */
 .grocery-list__header-container {
-  padding-left: var(--space-6);
-  padding-right: var(--space-6);
+  padding-left: var(--space-5);
+  padding-right: var(--space-5);
   padding-top: var(--space-10);
-  padding-bottom: var(--space-20);
+  padding-bottom: var(--space-10);
   background-color: var(--brand-500);
-  color: var(--gray-100);
+  color: var(--gray-0);
 }
 .header__user-image {
   height: 40px;
@@ -350,6 +349,7 @@ input {
   padding: var(--space-1);
   border-radius: var(--radius-full);
 }
+
 .grocery-item__actions-quantity {
   font-size: var(--text-base);
   margin: 0 var(--space-2);
@@ -406,7 +406,7 @@ input {
   padding: var(--space-2);
 }
 .summary-info-container {
-  padding: var(--space-4);
+  padding: var(--space-2);
 }
 
 .summary-price {
@@ -414,7 +414,7 @@ input {
   font-weight: 600;
 }
 .summary-details {
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   color: var(--gray-600);
 }
 
@@ -434,6 +434,7 @@ input {
   background: var(--gray-0);
   transform: translateY(100%);
   transition: transform 0.3s ease;
+  margin: 0;
 }
 .dialog[open] {
   transform: translateY(0);
@@ -491,19 +492,20 @@ input {
 /* INPUTS */
 
 input {
+  font-size: var(--text-base);
   width: 100%;
   border: 1px solid var(--gray-300);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   margin: var(--space-1) 0;
   outline: none;
-  padding: var(--space-2);
+  padding: var(--space-3);
   box-sizing: border-box;
   transition: 0.3s;
 }
 
 input:focus {
   border-color: var(--brand-200);
-  box-shadow: 0 0 4px 0 #adbcf2;
+  box-shadow: 0 0 4px 0 var(--brand-100);
 }
 
 input:disabled {

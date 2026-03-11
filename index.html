@@ -20,11 +20,11 @@
         <figure>
           <img
             class="header__user-image"
-            src="src/img/avatar-1.png"
+            src="src/img/gen-avatar.png"
             alt="User's avatar"
           />
         </figure>
-        <h1 class="header__user-name">Grocery list!</h1>
+        <h1 class="header__user-name">Your grocery list:</h1>
       </div>
       <!-- <button
         type="button"
@@ -45,20 +45,20 @@
         <div class="summary-info-container">
           <h3 id="summary-title" class="visually-hidden"></h3>
           <p class="summary-price"></p>
-          <!-- <p class="summary-details"></p> -->
+          <p class="summary-details"></p>
         </div>
         <button
           type="button"
           class="js-add-item-button btn btn-lg flex items-center gap-8 btn-primary btn-float"
         >
-          <span class="material-symbols-outlined btn-icon">add</span> Add item
+          <span class="material-symbols-outlined btn-icon">add</span> Item
         </button>
       </section>
     </main>
     <!-- Add item dialog -->
     <dialog class="dialog" id="addItemDialog" aria-labelledby="dialog-title">
       <form method="dialog" class="js-add-item-form">
-        <header class="dialog-header flex justify-between">
+        <header class="dialog-header flex justify-between items-center">
           <h2 id="dialog-title" class="dialog-title">New item</h2>
 
           <button
@@ -68,7 +68,7 @@
             class="js-dialog-close-btn btn btn-md btn__control"
             formnovalidate
           >
-            ×
+            <span class="material-symbols-outlined btn-icon">close</span>
           </button>
         </header>
 
@@ -125,7 +125,7 @@
     <!-- Edit item dialog -->
     <dialog class="dialog" id="editItemDialog" aria-labelledby="dialog-title">
       <form method="dialog" class="js-edit-item-form">
-        <header class="dialog-header flex justify-between">
+        <header class="dialog-header flex justify-between items-center">
           <h2 id="dialog-title" class="dialog-title">Edit item</h2>
 
           <button
@@ -135,7 +135,7 @@
             class="dialog-close btn btn-md btn__control"
             formnovalidate
           >
-            ×
+            <span class="material-symbols-outlined btn-icon">close</span>
           </button>
         </header>
 
@@ -174,7 +174,7 @@
               data-behavior="remove"
               class="js-btn-qty btn btn__control btn__control-remove"
             >
-              −
+              <span class="material-symbols-outlined btn-icon">remove</span>
             </button>
 
             <output id="editQuantityValue" aria-live="polite"> 2 </output>
@@ -185,7 +185,7 @@
               data-behavior="add"
               class="js-btn-qty btn btn__control btn__control-add"
             >
-              +
+              <span class="material-symbols-outlined btn-icon">add</span>
             </button>
           </fieldset>
         </div>
@@ -212,13 +212,13 @@
     </dialog>
 
     <!-- add friend dialog -->
-    <dialog
+    <!-- <dialog
       class="dialog"
       id="addFriendDialog"
       aria-labelledby="friendDialogTitle"
     >
       <form method="dialog" class="js-add-friend-form">
-        <header class="dialog-header flex justify-between">
+        <header class="dialog-header flex justify-between items-center">
           <h2 id="friendDialogTitle">Add new Friend</h2>
 
           <button
@@ -228,7 +228,7 @@
             class="dialog-close btn btn-md btn__control"
             formnovalidate
           >
-            ×
+            <span class="material-symbols-outlined btn-icon">close</span>
           </button>
         </header>
 
@@ -308,7 +308,7 @@
           </button>
         </footer>
       </form>
-    </dialog>
+    </dialog> -->
     <script type="module" src="/src/js/listController"></script>
   </body>
 </html>
