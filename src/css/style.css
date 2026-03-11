@@ -150,6 +150,9 @@ p,
 figure {
   margin: 0;
 }
+input {
+  font-size: var(--text-base);
+}
 
 /* UTILITIES */
 .visually-hidden {
@@ -215,6 +218,7 @@ figure {
   font-family: var(--font-sans);
   font-optical-sizing: auto;
   transition: all 0.4s;
+  touch-action: manipulation;
 }
 .btn:hover {
   cursor: pointer;
@@ -257,8 +261,8 @@ figure {
 
 .btn__control {
   border-radius: var(--radius-full);
-  height: 32px;
-  width: 32px;
+  height: 40px;
+  width: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -289,15 +293,16 @@ figure {
   background-color: var(--error-800);
 }
 
-.btn-float-primary {
+/* .btn-float-primary {
   background-color: var(--brand-500);
   color: var(--gray-100);
   border-radius: var(--radius-md);
   padding-left: var(--space-5);
   padding-right: var(--space-5);
-  height: 70px;
-  width: 70px;
-}
+  height: 48px;
+
+} */
+
 .btn-float-primary .btn-icon {
   font-size: var(--text-2xl);
 }
@@ -335,7 +340,7 @@ figure {
   margin-bottom: var(--space-32);
 }
 
-.grocery-item {
+.grocery__item-container {
   padding: var(--space-3) 0;
   border-bottom: 1px solid var(--gray-100);
 }
@@ -362,6 +367,7 @@ figure {
   font-size: var(--text-base);
   font-weight: 600;
 }
+
 .grocery-item__header-subtitle-container {
   font-size: var(--text-sm);
   color: var(--gray-600);
@@ -375,6 +381,7 @@ figure {
 
 .grocery-item__total {
   font-weight: 600;
+  margin-right: var(--space-2);
 }
 
 /* SUMMARY */
@@ -391,9 +398,15 @@ figure {
   -webkit-box-shadow: 0px 8px 16px 0px #f1f0ef;
   box-shadow: 0px 8px 16px 0px #f1f0ef;
 }
-.summary-info-container,
+.cart-summary .btn-lg {
+  border-radius: 16px;
+}
+
 .cart-summary {
   padding: var(--space-2);
+}
+.summary-info-container {
+  padding: var(--space-4);
 }
 
 .summary-price {

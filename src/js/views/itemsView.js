@@ -31,26 +31,29 @@ class ItemsView {
   _dataFriends;
   _totalFriends = 1;
   _generateMarkup(item) {
-    return `<li class="grocery-item" data-id="${item.id}">
-                <article>
+    return `<li class="js-grocery-item grocery__item-container" data-id="${item.id}">
+                <article class="flex justify-between items-center">
                     <header class="grocery-item__header">
                         <h3 class="grocery-item__header-title">${item.name}</h3>
-                        <p class="grocery-item__header-subtitle-container flex items-center gap-4">
-                            <span class="grocery-item__header-subtitle js-item-price">${item.price}</span>
-                            <span>/ unit</span>
-                            <span class="material-symbols-outlined btn-icon">edit</span>
-                        </p>
+                        <div class="flex">
+                            <p class="grocery-item__total">
+                                <output aria-label="Total price for ${item.name}">
+                                    ${this._formatCurrency(+item.price * +item.quantity)}
+                                </output>
+                            </p>
+                            <p class="grocery-item__header-subtitle-container flex items-center gap-4">
+                                 • <span class="grocery-item__header-subtitle js-item-price">${this._formatCurrency(item.price)}</span>
+                                <span>each </span>
+                                <span class="material-symbols-outlined btn-icon">edit</span>
+                            </p> 
+                        </div>
                     </header>
                     <div class="grocery-item__quantity-container flex justify-between items-center ">
-                        <p class="grocery-item__total">
-                            <output aria-label="Total price for ${item.name}">
-                                ${+item.price * +item.quantity}
-                            </output>
-                        </p>
+                        
                         <div class="js-quantity-selector grocery-item__actions flex justify-between items-center gap-16 ">
-                        <div class="js-dynamic-button">  
-                            ${this._generateQtyButtonMarkup("remove")}
-                        </div>  
+                            <div class="js-dynamic-button">  
+                                ${this._generateQtyButtonMarkup("remove")}
+                            </div>  
                             <output
                             class="js-item-quantity"
                             value="${item.quantity}"
@@ -62,11 +65,17 @@ class ItemsView {
                             <button class="js-add-button  btn btn__control btn__control-add" type="button" data-behavior="add" aria-label="Add one ${item.name}">
                             <span class="material-symbols-outlined btn-icon">add</span>
                             </button>
-                        </div>
-                        
+                        </div>  
                     </div>
                 </article>
           </li>`;
+  }
+
+  _formatCurrency(value) {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(value);
   }
 
   _generateEmptyState() {
@@ -122,8 +131,10 @@ class ItemsView {
       (acc, item) => acc + item.quantity,
       0,
     );
-    this._summaryPrice.textContent = `${totalPrice}`;
-    this._summaryDetails.innerHTML = `${totalQuantity} items | ${totalPrice / this._totalFriends} for each friend `;
+    this._summaryPrice.innerHTML = `${this._formatCurrency(totalPrice)}  <span class="summary-details"> • ${totalQuantity} items</span>`;
+    // this._summaryDetails.innerHTML = `${totalQuantity} items | ${totalPrice / this._totalFriends} for each friend `;
+    // this._summaryPrice.textContent = `${this._formatCurrency(totalPrice)}`;
+    // this._summaryDetails.innerHTML = `${totalQuantity} items | ${totalPrice / this._totalFriends} for each friend `;
   }
 
   updateSummary(newItemQuantity, updatedItemID) {
@@ -223,7 +234,7 @@ class ItemsView {
       const header = e.target.closest(".grocery-item__header");
       if (!header) return;
       // filter the item by it's id
-      const currItemID = e.target.closest(".grocery-item").dataset.id;
+      const currItemID = e.target.closest(".js-grocery-item").dataset.id;
       const currItem = this._dataItems.filter(
         (item) => item.id === currItemID,
         0,
@@ -266,7 +277,7 @@ class ItemsView {
       const btn = e.target.closest("button");
       if (!btn) return;
 
-      const groceryItem = btn.closest(".grocery-item");
+      const groceryItem = btn.closest(".js-grocery-item");
       const itemQuantity = document.querySelector(".js-item-quantity");
       if (btn.dataset.behavior === "delete") {
         handler(itemQuantity.value, groceryItem.dataset.id);
@@ -280,38 +291,37 @@ class ItemsView {
       const btn = e.target.closest("button");
       if (!btn) return;
 
-      const groceryItem = btn.closest(".grocery-item");
-      const itemQuantity = groceryItem.querySelector(".js-item-quantity");
-      const itemTotalPrice = groceryItem.querySelector(".grocery-item__total");
-
-      let quantity = +itemQuantity.value;
-      const itemPrice = +groceryItem.querySelector(
-        ".grocery-item__header-subtitle",
-      ).textContent;
-
-      // updates interface
+      const groceryItem = btn.closest(".js-grocery-item");
+      const itemID = groceryItem.dataset.id;
       const buttonDynamicContainer =
         groceryItem.querySelector(".js-dynamic-button");
+      const currItem = this._dataItems.filter((item) => {
+        return item.id === itemID;
+      }, 0)[0];
 
-      if (btn.dataset.behavior === "remove") {
-        quantity--;
-        if (quantity <= 1)
-          buttonDynamicContainer.innerHTML =
-            this._generateQtyButtonMarkup("delete");
-      }
+      // updates quantity
+      let quantity = currItem.quantity;
+      btn.dataset.behavior === "add" ? quantity++ : quantity--;
 
-      if (btn.dataset.behavior === "add") {
-        quantity++;
-        if (quantity === 2)
-          buttonDynamicContainer.innerHTML =
-            this._generateQtyButtonMarkup("remove");
-      }
+      if (quantity === 1)
+        buttonDynamicContainer.innerHTML =
+          this._generateQtyButtonMarkup("delete");
 
-      itemQuantity.value = quantity;
-      itemTotalPrice.textContent = itemPrice * quantity;
+      if (quantity === 2)
+        buttonDynamicContainer.innerHTML =
+          this._generateQtyButtonMarkup("remove");
+
+      // update interface
+      const uiQuantity = groceryItem.querySelector(".js-item-quantity");
+      const uiTotalPrice = groceryItem.querySelector(".grocery-item__total");
+
+      uiQuantity.textContent = quantity;
+      uiTotalPrice.textContent = this._formatCurrency(
+        currItem.price * quantity,
+      );
 
       // update database
-      updateItem(groceryItem.dataset.id, quantity, itemPrice);
+      updateItem(itemID, quantity, currItem.price);
     });
   }
 }

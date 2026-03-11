@@ -50,7 +50,7 @@ async function init() {
   itemsView.addItemHandler();
   itemsView.editItemHandler(controlUpdateItemControl);
   itemsView.formFieldHandler();
-  itemsView.addNewFriendHandler(addFriend);
+  //   itemsView.addNewFriendHandler(addFriend);
 }
 
 init();
